@@ -1,0 +1,39 @@
+{
+  "name": "kite-agent",
+  "version": "1.0.0",
+  "description": "Everyday tasks agent: spreadsheet extraction, doc/image viewer, and automated alerts.",
+  "author": "Kite Agent Team",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5",
+    "nodemailer": "^6.9.13"
+  },
+  "devDependencies": {
+    "electron": "^29.3.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.kiteagent.app",
+    "productName": "KiteAgent",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "portable"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "package.json"
+    ]
+  }
+}

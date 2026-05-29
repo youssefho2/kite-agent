@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kite Agent - Smart Workspace</title>
+  <!-- Outfit Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- sheetjs parser (loaded locally or CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- jspreadsheet-ce for interactive grid -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsuites@4/dist/jsuites.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4/dist/jspreadsheet.min.css" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/jsuites@4/dist/jsuites.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4/dist/index.min.js"></script>
+</head>
+<body>
+  <!-- Window Titlebar for Custom Controls -->
+  <div class="window-titlebar">
+    <div class="window-title">Kite Agent</div>
+    <div class="window-controls">
+      <button class="win-btn" id="win-btn-minimize" title="Minimize">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <button class="win-btn" id="win-btn-maximize" title="Maximize">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+      </button>
+      <button class="win-btn win-btn-close" id="win-btn-close" title="Close">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Background Glows -->
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 22h20L12 2zM12 6l7.5 13H4.5L12 6z"/>
+          </svg>
+        </div>
+        <h1>Kite Agent</h1>
+      </div>
+      
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="workspace">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          Workspace
+        </button>
+        <button class="nav-item" data-tab="schedules">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Audit Reminders
+          <span class="badge" id="alert-badge">0</span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </button>
+      </nav>
+
+      <div class="user-profile">
+        <div class="user-avatar">K</div>
+        <div class="user-info">
+          <p class="user-name">API Petroleum</p>
+          <p class="user-role">Workspace Mode</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Content -->
+    <main class="main-content">
+      
+      <!-- TAB 1: WORKSPACE -->
+      <section id="tab-workspace" class="tab-pane active">
+        <div class="action-header">
+          <h2>Task Center</h2>
+          <div class="action-buttons">
+            <button class="btn btn-secondary" id="btn-open-file">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Open File
+            </button>
+            <button class="btn btn-secondary" id="btn-ocr-spreadsheet">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M21 16V8a2 2 0 0 0-2-2h-5l-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z"/></svg>
+              Convert Image to Excel
+            </button>
+            <button class="btn btn-primary" id="btn-circle-search">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              Circle Search
+            </button>
+          </div>
+        </div>
+
+        <div class="workspace-grid">
+          <!-- Viewer Area -->
+          <div class="viewer-container card">
+            <div class="viewer-header">
+              <span id="file-title">No file loaded. Open an image or spreadsheet to start.</span>
+              <button class="btn btn-secondary btn-small" id="btn-save-excel" style="display: none;">
+                Save as Excel
+              </button>
+            </div>
+            
+            <div class="viewer-body" id="viewer-body">
+              <!-- Upload placeholder state -->
+              <div class="upload-placeholder" id="upload-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <h3>Drag and drop or select file</h3>
+                <p>Supports PNG, JPG, WEBP, XLSX, XLS, TXT</p>
+              </div>
+
+              <!-- Container for images -->
+              <div id="image-viewer-container" class="viewer-content" style="display: none;">
+                <div class="canvas-wrapper">
+                  <img id="loaded-image" alt="Workspace document">
+                  <canvas id="selector-canvas"></canvas>
+                </div>
+              </div>
+
+              <!-- Container for spreadsheets -->
+              <div id="spreadsheet-viewer-container" class="viewer-content" style="display: none;">
+                <div class="table-responsive" id="table-container"></div>
+              </div>
+
+              <!-- Container for plain documents -->
+              <div id="document-viewer-container" class="viewer-content" style="display: none;">
+                <pre id="text-document-view"></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Assistant Area -->
+          <div class="chat-container card">
+            <div class="chat-header">
+              <h3>Kite Copilot</h3>
+              <span class="status-indicator">Online</span>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+              <div class="message system">
+                Hi! I am Kite Agent. Open a file to start, convert images into spreadsheets, or draw a circle to inspect/OCR data. You can ask me any question about the files!
+              </div>
+            </div>
+            <!-- Circle Search selection prompt -->
+            <div class="selection-preview" id="selection-preview" style="display: none;">
+              <div class="preview-header">
+                <span>Active Mouse Selection</span>
+                <button class="close-preview" id="btn-close-selection">✕</button>
+              </div>
+              <img id="selection-thumb" alt="Selection thumbnail">
+            </div>
+            <div class="chat-input-area">
+              <input type="text" id="chat-input" placeholder="Ask agent anything about this file..." />
+              <button class="btn btn-primary btn-icon" id="btn-send-message">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: AUDIT REMINDERS -->
+      <section id="tab-schedules" class="tab-pane">
+        <div class="action-header">
+          <h2>Audit & Travel Schedules</h2>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-secondary" id="btn-add-reminder">
+              + Add Reminder Row
+            </button>
+            <button class="btn btn-primary" id="btn-scan-audits">
+              Scan Open File for International Audits
+            </button>
+          </div>
+        </div>
+
+        <div class="schedules-grid">
+          <!-- Active alert monitor -->
+          <div class="alert-status card">
+            <h3>Notification Config</h3>
+            <p class="description">Automatically checks for audits outside of **Egypt**, and triggers local notification + visa warning email **1 month in advance** AND pre-audit email **16 days in advance**.</p>
+            <div class="status-indicator-box success" id="smtp-status-box">
+              <span class="dot"></span>
+              <span id="smtp-status-text">SMTP Email configuration active</span>
+            </div>
+          </div>
+
+          <!-- Reminders list -->
+          <div class="reminders-container card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h3>Registered Reminders & Alerts</h3>
+              <span class="help-text" style="color: var(--text-muted); font-size: 13px;">Double click cells to edit. Right-click spreadsheet rows to insert/delete.</span>
+            </div>
+            <div id="audit-spreadsheet-container"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: SETTINGS -->
+      <section id="tab-settings" class="tab-pane">
+        <h2>System Settings</h2>
+        
+        <div class="settings-grid">
+          <!-- OpenRouter API Settings -->
+          <div class="card settings-card">
+            <h3>OpenRouter API Configuration</h3>
+            <div class="input-group">
+              <label for="setting-api-key">OpenRouter API Key</label>
+              <input type="password" id="setting-api-key" placeholder="sk-or-v1-..." />
+            </div>
+            <div class="input-group">
+              <label for="setting-model">Preferred Model (Text)</label>
+              <input type="text" id="setting-model" value="google/gemini-2.5-flash:free" placeholder="e.g. google/gemini-2.5-flash:free" />
+            </div>
+            <div class="input-group">
+              <label for="setting-vision-model">Vision / OCR Model (Images)</label>
+              <input type="text" id="setting-vision-model" value="google/gemini-2.5-flash:free" placeholder="e.g. google/gemini-2.5-flash:free" />
+            </div>
+          </div>
+
+          <!-- Email / SMTP Settings -->
+          <div class="card settings-card">
+            <h3>SMTP Configuration (Travel Alerts)</h3>
+            
+            <div class="input-group">
+              <label for="setting-smtp-provider">Email Provider</label>
+              <select id="setting-smtp-provider">
+                <option value="gmail">Gmail / Google Workspace (Auto-configured)</option>
+                <option value="custom">Custom SMTP Server</option>
+              </select>
+            </div>
+
+            <div class="input-row" id="smtp-host-port-row">
+              <div class="input-group flex-2">
+                <label for="setting-smtp-host">SMTP Host</label>
+                <input type="text" id="setting-smtp-host" placeholder="smtp.gmail.com" />
+              </div>
+              <div class="input-group">
+                <label for="setting-smtp-port">Port</label>
+                <input type="number" id="setting-smtp-port" placeholder="465" />
+              </div>
+            </div>
+
+            <div class="input-row">
+              <div class="input-group">
+                <label for="setting-smtp-user" id="label-smtp-user">Gmail Address (Send From)</label>
+                <input type="email" id="setting-smtp-user" placeholder="your-email@gmail.com" />
+              </div>
+              <div class="input-group">
+                <label for="setting-smtp-pass" id="label-smtp-pass">Gmail App Password</label>
+                <input type="password" id="setting-smtp-pass" placeholder="••••••••••••••••" />
+                <span class="help-text" id="gmail-help-text">
+                  Must use a 16-character <a href="https://myaccount.google.com/apppasswords" target="_blank" style="color: var(--accent-color); text-decoration: underline;">Google App Password</a>, not your normal password.
+                </span>
+              </div>
+            </div>
+
+            <div class="input-row" id="sender-email-row">
+              <div class="input-group flex-2">
+                <label for="setting-sender-email">Sender Email Address (e.g. your verified Brevo email)</label>
+                <input type="email" id="setting-sender-email" placeholder="your-email@domain.com" />
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="setting-recipient-email">Recipient Email Address (Send To)</label>
+              <input type="email" id="setting-recipient-email" placeholder="hr@api-petroleum.com" />
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 15px; grid-column: 1 / -1; justify-content: flex-end;">
+            <button class="btn btn-secondary" id="btn-reset-settings">Reset to Defaults</button>
+            <button class="btn btn-primary" id="btn-save-settings">Save Settings</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
